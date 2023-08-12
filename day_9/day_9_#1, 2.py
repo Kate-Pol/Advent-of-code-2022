@@ -19,3 +19,66 @@ class Vector:
     def __repr__(self) -> str:
         return f"Vector({self.x}, {self.y})" 
     
+    def __eq__(self, other) -> bool:
+        return self.x == other.x and self.y == other.y
+    
+    def __hash__(self):
+        return hash((self.x, self.y))
+    
+    @property
+    def max_norm(self):
+        return max(abs(self.x), abs(self.y))  
+    
+    @property
+    def l2_norm_squared(self):
+        return self.x**2 + self.y**2 
+    
+DIRECTIONS = {
+        'R': Vector(1, 0),
+        'L': Vector(-1, 0),
+        'U': Vector(0, 1),
+        'D': Vector(0, -1),
+    }
+
+
+def get_head_moves(lines):
+    moves: list[Vector] = []
+    for line in lines:
+        direction, amount_str = line.split(" ")
+        move: Vector = DIRECTIONS[direction]
+        for _ in range(int(amount_str)):
+            moves.append(move)
+    return moves
+
+possible_tail_steps = [Vector(x, y) 
+                       for x in [-1, 0, 1]
+                       for y in [-1, 0, 1]
+                       if (x, y) != (0, 0)]
+
+def chase(head: Vector, tail: Vector):
+    """
+    .....
+    .....
+    ..T..
+    .....
+    .....
+    """
+    
+    difference = head - tail
+    if difference.max_norm <= 1:
+        return tail
+    best_step = get_best_step(goal_position = difference)
+    return tail + best_step
+
+def get_best_step(goal_position: Vector) -> Vector:
+    best_step = Vector(0, 0)
+    best_l2_norm_sq = 100
+    for step in possible_tail_steps:
+        l2_norm_sq = (goal_position - step).l2_norm_squared
+        if l2_norm_sq < best_l2_norm_sq:
+            best_step = step
+            best_l2_norm_sq = l2_norm_sq
+    return best_step
+
+
+        
