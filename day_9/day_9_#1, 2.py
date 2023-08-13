@@ -80,5 +80,17 @@ def get_best_step(goal_position: Vector) -> Vector:
             best_l2_norm_sq = l2_norm_sq
     return best_step
 
+def solve(lines):
+    head_position = Vector(0, 0)
+    tail_position = Vector(0, 0)
+    tail_positions: set[Vector] = {tail_position}
+    head_moves = get_head_moves(lines)
+    for head_move in head_moves:
+        head_position += head_move
+        tail_position = chase(head_position, tail_position)
+        tail_positions.add(tail_position)
+        
+
+
 
         
