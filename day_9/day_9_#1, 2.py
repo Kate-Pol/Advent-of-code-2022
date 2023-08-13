@@ -90,7 +90,17 @@ def solve(lines):
         tail_position = chase(head_position, tail_position)
         tail_positions.add(tail_position)
         
+    return len(tail_positions)
 
+def main():
+    lines = read_lines() 
+    solution = solve(lines)
+    print(f'{solution = }')
+    
+    
+if __name__ == '__main__':
+    main()
+    
 
 
         
